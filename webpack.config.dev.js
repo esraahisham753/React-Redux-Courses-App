@@ -25,6 +25,9 @@ module.exports = {
         https: false
     },
     plugins: [
+        new webpack.DefinePlugin({
+            "process.env.API_URL": JSON.stringify("https://s9ckr5-3001.csb.app")
+        }),
         new HtmlWebpackPlugin({
             template: "src/index.html",
             favicon: "src/favicon.ico"
@@ -38,7 +41,7 @@ module.exports = {
                 use: ["babel-loader", "eslint-loader"]
             },
             {
-                test: /(\.css)$/,
+                test: /\.css$/,
                 use: ["style-loader", "css-loader"]
             }
         ]
