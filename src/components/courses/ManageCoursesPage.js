@@ -11,13 +11,13 @@ function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAutho
     const [errors, setErrors] = useState({});
 
      useEffect(() => {
-        //console.log(newCourse);
+        //console.log("ManageCoursesPage props", courses);
         if(courses.length === 0) {
             loadCourses().catch(error => {
                 console.log(error);
             });
         } else {
-            console.log("set course state");
+            //console.log("set course state");
             setCourse(props.course);
         }
 
@@ -65,20 +65,17 @@ ManageCoursesPage.propTypes = {
     history: PropTypes.object.isRequired
 }
 
-function getCourseBySlug(courses, slug) {
+export function getCourseBySlug(courses, slug) {
     return courses.find(a => a.slug === slug) || null;
 }
 
 function mapStateToProps(state, ownProps) {
     const slug = ownProps.match.params.slug;
+    const course = slug && state.courses.length > 0 ? getCourseBySlug(state.courses, slug) : newCourse;
     return {
-        courses: state.authors.length === 0 ?
-        [] :
-        state.courses.map(course => {
-            return { ...course, authorName: state.authors.find(a => a.id === course.authorId).name}
-        }),
-        authors: state.authors,
-        course: slug && courses.length > 0 ? getCourseBySlug(state.courses, slug) : newCourse
+        course,
+        courses: state.courses,
+        authors: state.authors
     };
 }
 
