@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {loadCourses, saveCourse}  from '../../redux/actions/courseActions';
 import {loadAuthors}  from '../../redux/actions/authorActions';
 import CourseForm from './CourseForm';
-import {newCourse} from '../../../tools/mockData';
+import {courses, newCourse} from '../../../tools/mockData';
 
 function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAuthors, history, ...props}) {
     const [course, setCourse] = useState(props.course);
@@ -16,13 +16,17 @@ function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAutho
             loadCourses().catch(error => {
                 console.log(error);
             });
+        } else {
+            console.log("set course state");
+            setCourse(props.course);
         }
+
         if(authors.length === 0) {
             loadAuthors().catch((error) => {
                 console.log(error);
             });
         }
-    }, []);
+    }, [props.course]);
 
     function handleChange(event) {
         const {name, value} = event.target;
@@ -61,7 +65,12 @@ ManageCoursesPage.propTypes = {
     history: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
+function getCourseBySlug(courses, slug) {
+    return courses.find(a => a.slug === slug) || null;
+}
+
+function mapStateToProps(state, ownProps) {
+    const slug = ownProps.match.params.slug;
     return {
         courses: state.authors.length === 0 ?
         [] :
@@ -69,7 +78,7 @@ function mapStateToProps(state) {
             return { ...course, authorName: state.authors.find(a => a.id === course.authorId).name}
         }),
         authors: state.authors,
-        course: newCourse
+        course: slug && courses.length > 0 ? getCourseBySlug(state.courses, slug) : newCourse
     };
 }
 

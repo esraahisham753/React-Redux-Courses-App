@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import * as coursesActions from '../../redux/actions/courseActions';
@@ -7,42 +7,32 @@ import {bindActionCreators} from 'redux';
 import CourseList from './CourseList';
 import {Redirect} from 'react-router-dom';
 
-class CoursesPage extends React.Component {
-    state = {
-        isRedirect: false
-    }
+function CoursesPage({courses, authors, actions}) {
+    const [isRedirect, setIsRedirect] = useState(false);
 
-    componentDidMount() {
-        const {courses, authors, actions} = this.props;
-        if(courses.length === 0) {
-            actions.loadCourses().catch(error => console.log(error));
-        }
-        if(authors.length === 0) {
-            actions.loadAuthors();
-            if(! authors) {
-                alert("Loading authors failed");
-            }
-        }
-    }
+    useEffect(() =>  {
+        console.log("courses number", courses.length);     
+        actions.loadCourses().catch(error => console.log(error));   
+        actions.loadAuthors().catch(error => console.log(error));   
+    }, [courses.length]);
 
 
-    render() {
-        return (
+    return(
             <div>
-                {this.state.isRedirect && <Redirect to="/course" />}
+                {isRedirect && <Redirect to="/course" />}
                 <h2>Courses Page</h2>
                 <button 
                 className="btn btn-primary add-course"
-                onClick={() => this.setState({isRedirect: true})}
+                onClick={() => setIsRedirect(true)}
                 style={{marginBottom: "20px"}}
                 >
                     Add Course
                 </button>
-                <CourseList courses={this.props.courses} />
+                <CourseList courses={courses} />
             </div>
         );
     }
-}
+
 
 CoursesPage.propTypes = {
     courses: PropTypes.array.isRequired,
