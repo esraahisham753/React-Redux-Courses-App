@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import * as courseApi from '../../api/courseApi';
+import beginApiCall from './apiStatusActions';
 
 export const createCourseSuccess = (course) => {
     return {
@@ -21,6 +22,7 @@ export const loadCoursesSuccess = (courses) => {
 
 export const loadCourses = () => {
     return function(dispatch) {
+        dispatch(beginApiCall());
         return courseApi.getCourses()
         .then(courses => {
             dispatch(loadCoursesSuccess(courses));
@@ -33,6 +35,7 @@ export const loadCourses = () => {
 
 export const saveCourse = (course) => {
     return function(dispatch) {
+        dispatch(beginApiCall());
         return courseApi
         .saveCourse(course)
         .then(course => {
