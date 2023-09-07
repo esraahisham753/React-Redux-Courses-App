@@ -12,14 +12,14 @@ function CoursesPage({courses, authors, actions, loading}) {
     const [isRedirect, setIsRedirect] = useState(false);
 
     useEffect(() =>  {
-        console.log("courses number", courses.length); 
+        //console.log("courses number", courses.length); 
         if(courses.length === 0) {
             actions.loadCourses().catch(error => console.log(error));
         } 
         if(authors.length === 0) {
             actions.loadAuthors().catch(error => console.log(error));
         }   
-    }, [courses.length]);
+    }, []);
    //console.log("loading", loading);
 
     return(

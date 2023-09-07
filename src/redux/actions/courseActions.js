@@ -37,12 +37,20 @@ export const loadCourses = () => {
 
 export const saveCourse = (course) => {
     return function(dispatch) {
+       // console.log("Thunk called");
+        //console.log("course", course);
         dispatch(beginApiCall());
         return courseApi
         .saveCourse(course)
-        .then(course => {
-            course.id ? dispatch(updateCourseSuccess(course)) :
-            dispatch(createCourseSuccess(course));
+        .then(savedCourse => {
+            //console.log("In save course then");
+            //console.log("Saved course", savedCourse);
+            if(course.id){
+                dispatch(updateCourseSuccess(savedCourse))
+            } else {
+                //console.log("dispatching createCourseSuccess");
+                dispatch(createCourseSuccess(savedCourse));
+            }
         })
         .catch(error => {
             dispatch(apiCallError());

@@ -45,7 +45,7 @@ function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAutho
         const {title, authorId, category} = course;
 
         if(! title) errors.title = "Title is required!";
-        if(! authorId) errors.authorId = "Author is required!";
+        if(! authorId) errors.author = "Author is required!";
         if(! category) errors.category = "Category is required";
 
         setErrors(errors);
