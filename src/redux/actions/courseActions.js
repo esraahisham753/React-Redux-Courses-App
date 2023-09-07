@@ -1,7 +1,6 @@
 import * as types from './actionTypes';
 import * as courseApi from '../../api/courseApi';
-import beginApiCall from './apiStatusActions';
-import { apiCallError } from './apiStatusActions';
+import beginApiCall, {apiCallError} from './apiStatusActions';
 
 export const createCourseSuccess = (course) => {
     return {
@@ -19,7 +18,11 @@ export const updateCourseSuccess = (course) => {
 
 export const loadCoursesSuccess = (courses) => {
     return {type: types.LOAD_COURSES_SUCCESS, courses};
-} 
+}
+
+export function deleteCourseOptimistic(course) {
+    return {type: types.DELETE_COURSE_OPTIMISTIC, course};
+}
 
 export const loadCourses = () => {
     return function(dispatch) {
@@ -58,3 +61,13 @@ export const saveCourse = (course) => {
         });
     };
 };
+
+export function deleteCourse(course) {
+    return function(dispatch) {
+        dispatch(deleteCourseOptimistic(course));
+        return courseApi.deleteCourse(course.id)
+        .catch(error => {
+            throw error;
+        });
+    }
+}
