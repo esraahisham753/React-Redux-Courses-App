@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import {loadCourses, saveCourse}  from '../../redux/actions/courseActions';
 import {loadAuthors}  from '../../redux/actions/authorActions';
 import CourseForm from './CourseForm';
-import {courses, newCourse} from '../../../tools/mockData';
+import {newCourse} from '../../../tools/mockData';
+import Spinner from '../common/Spinner';
+import {toast} from 'react-toastify';
 
 function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAuthors, history, ...props}) {
     const [course, setCourse] = useState(props.course);
     const [errors, setErrors] = useState({});
+    const [saving, setSaving] = useState(false);
 
      useEffect(() => {
         //console.log("ManageCoursesPage props", courses);
@@ -37,12 +40,35 @@ function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAutho
         }));
     }
 
+    function isFormValid() {
+        const errors = {};
+        const {title, authorId, category} = course;
+
+        if(! title) errors.title = "Title is required!";
+        if(! authorId) errors.authorId = "Author is required!";
+        if(! category) errors.category = "Category is required";
+
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
+        if(! isFormValid()) return;
+        setSaving(true);
         saveCourse(course).then(() => {
+            toast.success("Course Saved.");
             history.push("/courses")
         })
+        .catch(error => {
+            setSaving(false);
+            setErrors({
+                onSave: error.message
+            });
+        });
     }
+
+    if(authors.length === 0 || courses.length === 0) return <Spinner />
 
     return (
         <CourseForm 
@@ -50,7 +76,8 @@ function ManageCoursesPage({courses, authors, loadCourses, saveCourse, loadAutho
         errors={errors} 
         authors={authors} 
         onChange={handleChange}
-        onSave={handleSubmit}/>
+        onSave={handleSubmit}
+        saving={saving}/>
     );
 
 }
