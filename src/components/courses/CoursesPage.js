@@ -23,12 +23,14 @@ function CoursesPage({courses, authors, actions, loading}) {
     }, []);
    //console.log("loading", loading);
 
-   function handleDelete(course) {
+   async function handleDelete(course) {
     toast.success("Course deleted");
-    actions.deleteCourse(course)
-    .catch(error => {
+    try {
+    await actions.deleteCourse(course);
+    }
+    catch(error) {
         toast.error("Delete failed. " + error.message, {autoClose: false});
-    });
+    }
    }
 
     return(
