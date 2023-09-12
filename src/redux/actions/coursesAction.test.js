@@ -1,4 +1,4 @@
-import * as coursesActions from './courseActions';
+import * as courseActions from './courseActions';
 import * as types from './actionTypes';
 import {courses} from '../../../tools/mockData';
 import thunk from 'redux-thunk';
@@ -16,7 +16,7 @@ describe("Async actions", () => {
 
     describe("Load courses thunk", () => {
         it("Should create begin api call and load courses success when load courses", () => {
-            fetchMock('*', {
+            fetchMock.mock('*', {
                 body: courses,
                 headers: {"content-type": "application/json"}
             });
@@ -27,6 +27,10 @@ describe("Async actions", () => {
             ];
 
             const store = mockStore({courses: []});
+
+            return store.dispatch(courseActions.loadCourses()).then(() => {
+                expect(store.getActions()).toEqual(expectedActions);
+            });
             
         })
     })
@@ -40,7 +44,7 @@ describe("createCourseSuccess action test", () => {
             course
         };
 
-        const action = coursesActions.createCourseSuccess(course);
+        const action = courseActions.createCourseSuccess(course);
         expect(action).toEqual(expectedAction);
     });
 })
