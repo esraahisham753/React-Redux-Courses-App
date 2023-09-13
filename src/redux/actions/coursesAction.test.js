@@ -16,7 +16,7 @@ describe("Async actions", () => {
 
     describe("Load courses thunk", () => {
         it("Should create begin api call and load courses success when load courses", () => {
-            fetchMock('*', {
+            fetchMock.mock('*', {
                 body: courses,
                 headers: {"content-type": "application/json"}
             });
